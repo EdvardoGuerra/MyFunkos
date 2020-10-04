@@ -1,0 +1,44 @@
+{
+  "itens": [
+    {
+      "titulo": "Betty Boop Enfermeira",
+      "imagem": "@drawable/betty_boop",
+      "descricao": "Pop! Animation #524",
+      "universo": "Betty Boop",
+      "data": "09/06/2020",
+      "valor": "R$ 99,00"
+    },
+    {
+      "titulo": "Gohan",
+      "imagem": "@drawable/gohan",
+      "descricao": "Pop! Animation #104",
+      "universo": "Dragon Ball Z",
+      "data": "05/08/2019",
+      "valor": "120,00"
+    },
+    {
+      "titulo": "Morte",
+      "imagem": "@drawable/morte",
+      "descricao": "Pop! Heroes #234",
+      "universo": "DC Super Heroes",
+      "data": "07/07/2019",
+      "valor": "R$ 200,00"
+    },
+    {
+      "titulo": "Piccolo",
+      "imagem": "@drawable/piccolo",
+      "descricao": "Pop! Animation #670",
+      "universo": "Dragon Ball Z",
+      "data": "20/02/2020",
+      "valor": "R$ 145,00"
+    },
+    {
+      "titulo": "Yamcha & Pual",
+      "imagem": "@drawable/yamcha_pual",
+      "descricao": "Pop! Animation #531",
+      "universo": "Dragon Ball Z",
+      "data": "15/11/2018",
+      "valor": "R$ 100,00"
+    }
+  ]
+}

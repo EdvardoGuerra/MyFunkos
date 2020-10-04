@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">MyFunkos</string>
+    <string name="banner_colecoes">Banner inicial de coleções</string>
+    <string name="colecoes">Coleções</string>
+    <string name="funko">Funko Pop!</string>
+    <string name="novo_item">Novo Item</string>
+    <string name="tirar_foto">Tirar Foto</string>
+    <string name="titulo_label">Título:</string>
+    <string name="valor_label">Valor:</string>
+    <string name="universo_label">Universo:</string>
+    <string name="universo_da_personagem">Universo da personagem</string>
+    <string name="descricao_label">Descrição:</string>
+    <string name="descricao_do_item">Descrição do item</string>
+    <string name="nome_da_personagem">Nome da personagem</string>
+    <string name="valor_do_item">Valor do item</string>
+    <string name="data_compra_label">Data compra:</string>
+    <string name="dd_mm_aaaa">dd/mm/aaaa</string>
+    <string name="real_label">R$</string>
+    <string name="salvar_item">Salvar Item</string>
+    <string name="visualizacao_foto">Visualização da foto tirada</string>
+    <string name="foto_da_personagem">Foto da personagem</string>
+    <string name="compartilhar">Compartilhar</string>
+</resources>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.MainActivity">
+
+    <ImageView
+        android:id="@+id/colecoes_banner_inicial"
+        android:layout_width="0dp"
+        android:layout_height="120dp"
+        android:contentDescription="@string/banner_colecoes"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@color/colorPrimary" />
+
+    <TextView
+        android:id="@+id/lista_colecoes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:text="@string/colecoes"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/colecoes_banner_inicial"
+        app:layout_constraintEnd_toEndOf="@+id/colecoes_banner_inicial"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/colecoes_banner_inicial"
+        app:layout_constraintTop_toTopOf="@+id/colecoes_banner_inicial"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/colecoes_tipo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/funko"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/lista_colecoes"
+        app:layout_constraintTop_toBottomOf="@+id/lista_colecoes" />
+
+    <ListView
+        android:id="@+id/lista_itens_listview"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/colecoes_banner_inicial"
+        tools:listitem="@layout/item_colecao" />
+
+    <Button
+        android:id="@+id/botao_novo_item"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/botao_arredondado"
+        android:text="@string/novo_item"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/colecoes_banner_inicial"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/lista_colecoes"
+        app:layout_constraintTop_toTopOf="@+id/colecoes_banner_inicial" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

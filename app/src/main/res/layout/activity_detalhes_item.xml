@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.DetalhesItemActivity">
+
+    <ImageView
+        android:id="@+id/detalhe_item_imagem"
+        android:layout_width="192dp"
+        android:layout_height="256dp"
+        android:layout_marginTop="8dp"
+        android:contentDescription="@string/visualizacao_foto"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@android:drawable/ic_menu_camera" />
+
+    <TextView
+        android:id="@+id/detalhe_item_label_titulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/titulo_label"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detalhe_item_imagem" />
+
+    <TextView
+        android:id="@+id/detalhe_item_titulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        app:layout_constraintBottom_toBottomOf="@+id/detalhe_item_label_titulo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/detalhe_item_label_titulo"
+        tools:text="@string/nome_da_personagem" />
+
+    <TextView
+        android:id="@+id/detalhe_item_label_descricao"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/descricao_label"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/detalhe_item_label_titulo"
+        app:layout_constraintTop_toBottomOf="@+id/detalhe_item_label_titulo" />
+
+    <TextView
+        android:id="@+id/detalhe_item_descricao"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="@+id/detalhe_item_titulo"
+        app:layout_constraintTop_toBottomOf="@+id/detalhe_item_titulo"
+        tools:text="@string/descricao_do_item" />
+
+    <TextView
+        android:id="@+id/detalhe_item_label_universo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/universo_label"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/detalhe_item_label_descricao"
+        app:layout_constraintTop_toBottomOf="@+id/detalhe_item_label_descricao" />
+
+    <TextView
+        android:id="@+id/detalhe_item_universo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="@+id/detalhe_item_descricao"
+        app:layout_constraintTop_toBottomOf="@+id/detalhe_item_descricao"
+        tools:text="@string/universo_da_personagem" />
+
+    <TextView
+        android:id="@+id/detalhe_item_label_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/data_compra_label"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/detalhe_item_label_universo"
+        app:layout_constraintTop_toBottomOf="@+id/detalhe_item_label_universo" />
+
+    <TextView
+        android:id="@+id/detalhe_item_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="@+id/detalhe_item_universo"
+        app:layout_constraintTop_toBottomOf="@+id/detalhe_item_universo"
+        tools:text="Data da compra" />
+
+    <TextView
+        android:id="@+id/detalhe_item_label_valor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/valor_label"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/detalhe_item_label_data"
+        app:layout_constraintTop_toBottomOf="@+id/detalhe_item_label_data" />
+
+    <TextView
+        android:id="@+id/detalhe_item_valor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="@+id/detalhe_item_data"
+        app:layout_constraintTop_toBottomOf="@+id/detalhe_item_data"
+        tools:text="@string/valor_do_item" />
+
+    <Button
+        android:id="@+id/botao_compartilhar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/botao_arredondado"
+        android:contentDescription="@string/salvar_item"
+        android:text="@string/compartilhar"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/detalhe_item_imagem"
+        app:layout_constraintStart_toStartOf="@+id/detalhe_item_imagem"
+        app:layout_constraintTop_toBottomOf="@+id/detalhe_item_valor" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
