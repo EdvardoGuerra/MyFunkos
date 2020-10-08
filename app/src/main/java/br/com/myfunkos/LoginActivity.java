@@ -47,6 +47,16 @@ public class LoginActivity extends AppCompatActivity {
         configurarBotaoRedefinir();
     }
 
+    private void configurarBotaoEntrar() {
+        entrarBotao = findViewById(R.id.login_botao_login);
+        entrarBotao.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                checarLoginSenha();
+            }
+        });
+    }
+
     private void configurarBotaoRedefinir() {
         esqueciBotao = findViewById(R.id.login_botao_esqueci_senha);
         esqueciBotao.setOnClickListener(new View.OnClickListener() {
@@ -65,21 +75,6 @@ public class LoginActivity extends AppCompatActivity {
                 criarUser();
             }
         });
-    }
-
-    private void configurarBotaoEntrar() {
-        entrarBotao = findViewById(R.id.login_botao_login);
-        entrarBotao.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                checarLoginSenha();
-            }
-        });
-    }
-
-    private void redefinirSenha() {
-        String email = emailEditText.getText().toString();
-        fAuth.sendPasswordResetEmail(email);
     }
 
     private void checarLoginSenha() {
@@ -110,6 +105,11 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    private void redefinirSenha() {
+        String email = emailEditText.getText().toString();
+        fAuth.sendPasswordResetEmail(email);
     }
 
     private void vaiParaMain() {
