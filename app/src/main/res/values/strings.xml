@@ -20,4 +20,11 @@
     <string name="visualizacao_foto">Visualização da foto tirada</string>
     <string name="foto_da_personagem">Foto da personagem</string>
     <string name="compartilhar">Compartilhar</string>
+    <string name="e_mail">E-mail</string>
+    <string name="nome_dominio_com">nome@dominio.com</string>
+    <string name="senha">Senha</string>
+    <string name="entrar_na_conta">Entrar na conta</string>
+    <string name="criar_nova_conta">Criar nova conta</string>
+    <string name="esqueci_a_senha">Esqueci a senha</string>
+    <string name="senha_minima">Senha (mínimo de 6 caracteres)</string>
 </resources>
