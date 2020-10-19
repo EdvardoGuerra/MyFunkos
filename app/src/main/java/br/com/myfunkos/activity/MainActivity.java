@@ -3,6 +3,7 @@ package br.com.myfunkos.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -14,11 +15,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.util.List;
 
@@ -31,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String PATH_IMAGENS = "D:/Documentos/AndroidStudioProjects/MyFunkos/app/src/main/res/raw/";
     public static final String TITULO_APPBAR = "Minha Coleção";
+    public FirebaseAuth fAuth;
+    public FirebaseUser fUser;
     private StorageReference mStorageRef;
     private URL riversRef;
 
@@ -40,16 +55,72 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         setTitle(TITULO_APPBAR);
+        fAuth = FirebaseAuth.getInstance();
+        fUser = fAuth.getCurrentUser();
+
         configuraLista();
         configuraBotaoNovoItem();
 
-
-        mStorageRef = FirebaseStorage.getInstance().getReference();
-
-//        uploadImagem();
-//        downloadImagem();
+//        lerMeusFunkos();
+//        lerUmFunko();
+//        salvaFunko();
 
 
+
+
+
+
+    }
+
+    private void salvaFunko() {
+        Item item = new Item("teste", "imagem", "qualquer",
+                "marvel", "12/12/12", 15.45);
+        DatabaseReference meuJSON = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference meuJSON_FunkoPop = meuJSON.child("Colecoes/Funko Pop!");
+
+        String chave = meuJSON_FunkoPop.push().getKey();
+        meuJSON_FunkoPop.child(chave).setValue(item);
+    }
+
+    private void lerMeusFunkos() {
+        DatabaseReference meuJSON = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference meuJSON_FunkoPop = meuJSON.child("Colecoes/Funko Pop!");
+
+
+        meuJSON_FunkoPop.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String s = snapshot.getValue().toString();
+                Log.v("Funko", "Lista do snapshot: " + s);
+//                Item item = snapshot.getValue(Item.class);
+//                Log.v("Funko", "item: " + item.toString());
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void lerUmFunko() {
+        DatabaseReference meuJSON = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference meuJSON_FunkoPop = meuJSON.child("Colecoes/Funko Pop!");
+        DatabaseReference meuJSON_FunkoPop_0001 = meuJSON.child("Colecoes/Funko Pop!").child("0001");
+
+        meuJSON_FunkoPop_0001.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                Log.v("Funko", "0001: " + snapshot.getValue());
+                Log.v("Funko", "0001: " + snapshot.child("titulo").getValue());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void configuraLista() {
@@ -87,47 +158,4 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-//    private void downloadImagem() throws IOException {
-//        File localFile = File.createTempFile("images", "jpg");
-//        riversRef.getFile(localFile)
-//                .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-//                    @Override
-//                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-//                        // Successfully downloaded data to local file
-//                        // ...
-//                    }
-//                }).addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception exception) {
-//                // Handle failed download
-//                // ...
-//            }
-//        });
-//    }
-
-    private void uploadImagem() {
-
-        //After starting the UploadTask you can manage it using the pause() , resume() and cancel() methods.
-        Uri file;
-        file = Uri.fromFile(new File(PATH_IMAGENS + "morte.png"));
-
-        StorageReference morteRef = mStorageRef.child("images/morte.jpg");
-
-        morteRef.putFile(file)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        // Get a URL to the uploaded content
-//                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                        Task<Uri> downloadUrl = taskSnapshot.getStorage().getDownloadUrl();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Handle unsuccessful uploads
-                        // ...
-                    }
-                });
-    }
 }

@@ -1,4 +1,4 @@
-package br.com.myfunkos;
+package br.com.myfunkos.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,14 +16,18 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-import br.com.myfunkos.activity.MainActivity;
+import br.com.myfunkos.R;
 
 public class LoginActivity extends AppCompatActivity {
 
     public FirebaseAuth fAuth;
+    public FirebaseUser fUser;
     EditText emailEditText;
     EditText senhaEditText;
+    EditText nomeEditText;
     Button entrarBotao;
     Button criarBotao;
     Button esqueciBotao;
@@ -42,6 +46,7 @@ public class LoginActivity extends AppCompatActivity {
     private void inicializarElementos() {
         emailEditText = findViewById(R.id.login_email);
         senhaEditText = findViewById(R.id.login_senha);
+        nomeEditText = findViewById(R.id.login_nome);
         configurarBotaoEntrar();
         configurarBotaoCriar();
         configurarBotaoRedefinir();
@@ -81,19 +86,18 @@ public class LoginActivity extends AppCompatActivity {
 
         String email = emailEditText.getText().toString();
         String senha = senhaEditText.getText().toString();
-        email = "edvardo@uol.com.br";
-        senha = "smdpdm2020";
+
 
         fAuth.signInWithEmailAndPassword(email, senha)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            FirebaseUser user = fAuth.getCurrentUser();
-                            if (!user.isEmailVerified()) { //checa se email foi verificado
+                            fUser = fAuth.getCurrentUser();
+                            if (!fUser.isEmailVerified()) { //checa se email foi verificado
                                 Toast.makeText(getApplicationContext(), "Verificar email de confirmação",
                                         Toast.LENGTH_LONG).show();
-                                user.sendEmailVerification();
+                                fUser.sendEmailVerification();
                             } else {
                                 Toast.makeText(getApplicationContext(), "Usuário logado...",
                                         Toast.LENGTH_LONG).show();
@@ -120,6 +124,7 @@ public class LoginActivity extends AppCompatActivity {
     public void criarUser() {
         String email = emailEditText.getText().toString();
         String senha = senhaEditText.getText().toString();
+        String nome = nomeEditText.getText().toString();
 
         fAuth.createUserWithEmailAndPassword(email, senha)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -127,7 +132,9 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             //Usuário criado
-                            Toast.makeText(getApplicationContext(), "Usuário Criado", Toast.LENGTH_LONG).show();
+                            fUser = fAuth.getCurrentUser();
+                            salvaUsuarioAutenticado();
+                            Toast.makeText(getApplicationContext(), "Novo Usuário Criado", Toast.LENGTH_LONG).show();
                         } else {
                             //Não criado
                             Log.v("myfunko", "Exceção " + task.getException());
@@ -136,6 +143,19 @@ public class LoginActivity extends AppCompatActivity {
                 });
 
 
+    }
+
+    private void salvaUsuarioAutenticado() {
+        DatabaseReference meuJSON = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference meuJSONUsuarios = meuJSON.child("usuarios");
+
+        if (fUser != null){
+            meuJSONUsuarios.child(fUser.getUid())
+                    .child("nome")
+                    .setValue(nomeEditText.getText().toString());
+        } else{
+            Log.v("Funko", "Sem usuário");
+        }
     }
 
 }

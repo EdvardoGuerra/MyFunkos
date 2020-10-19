@@ -27,4 +27,7 @@
     <string name="criar_nova_conta">Criar nova conta</string>
     <string name="esqueci_a_senha">Esqueci a senha</string>
     <string name="senha_minima">Senha (mínimo de 6 caracteres)</string>
+    <string name="nome">Nome</string>
+    <string name="nome_do_usuario">Nome do usuário</string>
+    <string name="abrir_galeria">Abrir galeria</string>
 </resources>

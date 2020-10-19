@@ -1,28 +1,36 @@
 package br.com.myfunkos.activity;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.ImageDecoder;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.math.BigDecimal;
+import java.util.UUID;
 
 import br.com.myfunkos.R;
 import br.com.myfunkos.model.Item;
@@ -34,98 +42,162 @@ public class NovoItemActivity extends AppCompatActivity {
     private static final int REQUEST_TAKE_PHOTO = 1234;
 
     private Item item;
-    private String mCurrentPhotoPath;
+    public FirebaseAuth fAuth;
+    public FirebaseUser fUser;
+    ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_novo_item);
         setTitle(TITULO_APPBAR);
+        fAuth = FirebaseAuth.getInstance();
+        fUser = fAuth.getCurrentUser();
 
+        imageView = findViewById(R.id.detalhe_item_imagem);
+
+        configuraBotaoTirarFoto();
+        configuraBotaoAbrirGaleria();
         configuraBotaoNovoItem();
 
+    }
+
+    private void configuraBotaoTirarFoto() {
         Button tirarFoto = findViewById(R.id.botao_tirar_foto);
         tirarFoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                obterPermissoes();
-
-                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-                }
-
-
+//                obterPermissoes();
+                tirarFoto();
             }
         });
     }
 
-    private void obterPermissoes() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-        } else
-            dispatchTakePictureIntent();
-    }
-
-    private void dispatchTakePictureIntent() {
+    private void tirarFoto() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            File photoFile = null;
-            try {
-                File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-                photoFile = File.createTempFile("PHOTOAPP", ".jpg", storageDir);
-                mCurrentPhotoPath = "file:" + photoFile.getAbsolutePath();
-            } catch (IOException ex) {
-                Toast.makeText(getApplicationContext(), "Erro ao tirar a foto", Toast.LENGTH_SHORT).show();
-            }
-
-            if (photoFile != null) {
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
-                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-            }
+            startActivityForResult(takePictureIntent, 1);
         }
     }
+
+    private void configuraBotaoAbrirGaleria() {
+        final Button abrirGaleriaButton = findViewById(R.id.botao_abrir_galeria);
+        abrirGaleriaButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                abrirGaleria();
+            }
+        });
+    }
+
+    private void abrirGaleria() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.setType("image/");
+
+        if (intent.resolveActivity(this.getPackageManager()) != null) {
+            startActivityForResult(intent, 2);
+        }
+
+
+    }
+
+//    private void obterPermissoes() {
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+//                || ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+//                || ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+//        } else
+//            dispatchTakePictureIntent();
+//    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+            imageView.setImageBitmap(bitmap);
+        }
+
+        if (requestCode == 2 && resultCode == RESULT_OK) {
+            Uri pathImg = data.getData();
+            Bitmap imagemBitmap;
             try {
-                ImageView imagem = (ImageView) findViewById(R.id.detalhe_item_imagem);
-                Bitmap bm1 = BitmapFactory.decodeStream(getContentResolver().openInputStream(Uri.parse(mCurrentPhotoPath)));
-                imagem.setImageBitmap(bm1);
-            } catch (FileNotFoundException fnex) {
-                Toast.makeText(getApplicationContext(), "Foto não encontrada!", Toast.LENGTH_LONG).show();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    imagemBitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(getContentResolver(), pathImg));
+                    imageView.setImageBitmap(imagemBitmap);
+                } else {
+                    imagemBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), pathImg);
+                    imageView.setImageBitmap(imagemBitmap);
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case 1: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    dispatchTakePictureIntent();
-                } else {
-                    Toast.makeText(this, "Não vai funcionar!!!", Toast.LENGTH_LONG).show();
-                }
-                return;
-            }
-        }
-    }
 
     private void configuraBotaoNovoItem() {
         Button salvarItem = findViewById(R.id.botao_salvar);
         salvarItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                salvarImagem();
                 item = obterNovoItem();
                 Log.v("Funko", item.toString());
 
             }
         });
+    }
+
+    private void salvarImagem() {
+        Bitmap imagemBitmap = null;
+        try {
+            imagemBitmap = Bitmap.createBitmap(imageView.getWidth(), imageView.getHeight(), Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(imagemBitmap);
+            imageView.draw(canvas);
+        } catch (Exception e) {
+            BitmapDrawable imagemDrawable = (BitmapDrawable) imageView.getDrawable();
+            imagemBitmap = imagemDrawable.getBitmap();
+        }
+
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+        StorageReference pastaImagens = storageReference.child("imagens");
+        final String nomeFoto = UUID.randomUUID().toString();
+        StorageReference foto = pastaImagens.child(nomeFoto + ".jpeg");
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        imagemBitmap.compress(Bitmap.CompressFormat.JPEG, 75, outputStream);
+        UploadTask uploadTask = foto.putBytes(outputStream.toByteArray());
+
+        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Log.v("Funko", "Foto salva com sucesso");
+                salvarItem(nomeFoto);
+            }
+        });
+
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.v("Funko", "Falha no envio da foto");
+            }
+        });
+
+    }
+
+    private void salvarItem(String nomeFoto) {
+        DatabaseReference banco= FirebaseDatabase.getInstance().getReference();
+        DatabaseReference JSONItens = banco.child("itens");
+        DatabaseReference JSONItensPorUsuario = JSONItens.child(fUser.getUid());
+
+        String key =JSONItensPorUsuario.push().getKey();
+        Item item = obterNovoItem();
+        item.setImagem(nomeFoto);
+
+        JSONItensPorUsuario.child(key).setValue(item);
+
     }
 
 
@@ -149,10 +221,10 @@ public class NovoItemActivity extends AppCompatActivity {
 
         EditText valor = findViewById(R.id.novo_item_valor);
         String valorEmString = valor.getText().toString();
-        BigDecimal valorEmBigDecimal = BigDecimal.valueOf(Float.parseFloat(valorEmString));
+        Double valorEmDouble = (double) Float.parseFloat(valorEmString);
 
         novoItem = new Item(tituloEmTexto, imagemEmTexto, descricaoEmTexto,
-                universoEmTexto, dataEmTexto, valorEmBigDecimal);
+                universoEmTexto, dataEmTexto, valorEmDouble);
 
         return novoItem;
     }

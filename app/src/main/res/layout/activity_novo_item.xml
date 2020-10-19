@@ -23,14 +23,17 @@
         android:id="@+id/botao_tirar_foto"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
         android:background="@drawable/botao_arredondado"
         android:contentDescription="@string/tirar_foto"
         android:text="@string/tirar_foto"
         android:textColor="@android:color/white"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@+id/detalhe_item_imagem"
-        app:layout_constraintStart_toStartOf="@+id/detalhe_item_imagem"
+        app:layout_constraintEnd_toStartOf="@+id/botao_abrir_galeria"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/detalhe_item_imagem" />
 
     <TextView
@@ -169,15 +172,33 @@
         android:id="@+id/botao_salvar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
         android:background="@drawable/botao_arredondado"
         android:contentDescription="@string/salvar_item"
         android:text="@string/salvar_item"
         android:textColor="@android:color/white"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/botao_tirar_foto"
+        app:layout_constraintEnd_toEndOf="@+id/botao_abrir_galeria"
         app:layout_constraintStart_toStartOf="@+id/botao_tirar_foto"
         app:layout_constraintTop_toBottomOf="@+id/novo_item_valor" />
+
+    <Button
+        android:id="@+id/botao_abrir_galeria"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/botao_arredondado"
+        android:text="@string/abrir_galeria"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/botao_tirar_foto"
+        app:layout_constraintTop_toBottomOf="@+id/detalhe_item_imagem" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
