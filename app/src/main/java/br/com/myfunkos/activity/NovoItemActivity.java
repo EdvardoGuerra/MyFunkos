@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -97,8 +98,6 @@ public class NovoItemActivity extends AppCompatActivity {
         if (intent.resolveActivity(this.getPackageManager()) != null) {
             startActivityForResult(intent, 2);
         }
-
-
     }
 
 //    private void obterPermissoes() {
@@ -198,6 +197,14 @@ public class NovoItemActivity extends AppCompatActivity {
 
         JSONItensPorUsuario.child(key).setValue(item);
 
+        Toast.makeText(this, "Item salvo com sucesso", Toast.LENGTH_SHORT).show();
+        vaiParaMain();
+
+    }
+
+    private void vaiParaMain() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
 

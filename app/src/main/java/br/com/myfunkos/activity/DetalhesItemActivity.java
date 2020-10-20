@@ -32,9 +32,9 @@ public class DetalhesItemActivity extends AppCompatActivity {
             titulo.setText(itemRecuperado.getTitulo());
 
             ImageView imagem = findViewById(R.id.detalhe_item_imagem);
-            Drawable drawableImagem = ResourcesUtil.devolveDrawable(this,
-                    itemRecuperado.getImagem());
-            imagem.setImageDrawable(drawableImagem);
+//            Drawable drawableImagem = ResourcesUtil.devolveDrawable(this,
+//                    itemRecuperado.getImagem());
+//            imagem.setImageDrawable(drawableImagem);
 
             TextView descricao = findViewById(R.id.detalhe_item_descricao);
             descricao.setText(itemRecuperado.getDescricao());

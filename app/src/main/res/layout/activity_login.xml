@@ -30,11 +30,11 @@
         android:hint="@string/nome_dominio_com"
         android:importantForAutofill="no"
         android:inputType="textEmailAddress"
+        android:text="edvardo@uol.com.br"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_email_label"
-        tools:text="edvardo@uol.com.br" />
+        app:layout_constraintTop_toBottomOf="@+id/login_email_label" />
 
     <TextView
         android:id="@+id/login_senha_label"
@@ -58,11 +58,11 @@
         android:hint="@string/senha_minima"
         android:importantForAutofill="no"
         android:inputType="textPassword"
+        android:text="abc123"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="@+id/login_email"
         app:layout_constraintStart_toStartOf="@+id/login_email"
-        app:layout_constraintTop_toBottomOf="@+id/login_senha_label"
-        tools:text="abc123" />
+        app:layout_constraintTop_toBottomOf="@+id/login_senha_label" />
 
     <Button
         android:id="@+id/login_botao_login"

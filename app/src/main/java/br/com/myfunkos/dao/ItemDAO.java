@@ -10,6 +10,8 @@ import br.com.myfunkos.model.Item;
 public class ItemDAO {
     public List<Item> lista() {
         List<Item> itens = new ArrayList<>();
+
+
 //        List<Item> itens = new ArrayList<>(Arrays.asList(
 //                new Item("Betty Boop Enfermeira", "betty_boop",
 //                        "Animation #524", "Betty Boop",

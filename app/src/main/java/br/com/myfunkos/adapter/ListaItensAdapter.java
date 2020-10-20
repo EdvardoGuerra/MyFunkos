@@ -1,7 +1,6 @@
 package br.com.myfunkos.adapter;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,14 +8,29 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
 import java.util.List;
 
 import br.com.myfunkos.R;
 import br.com.myfunkos.model.Item;
+import br.com.myfunkos.util.GlideApp;
 import br.com.myfunkos.util.MoedaUtil;
-import br.com.myfunkos.util.ResourcesUtil;
 
 public class ListaItensAdapter extends BaseAdapter {
+
+    public FirebaseAuth fAuth;
+    public FirebaseUser fUser;
 
     private final List<Item> itens;
     private final Context context;
@@ -61,10 +75,39 @@ public class ListaItensAdapter extends BaseAdapter {
         titulo.setText(item.getTitulo());
     }
 
-    private void mostraImagem(View viewCriada, Item item) {
-        ImageView imagem = viewCriada.findViewById(R.id.item_colecao_imagem);
-        Drawable drawableImagem = ResourcesUtil.devolveDrawable(context, item.getImagem());
-        imagem.setImageDrawable(drawableImagem);
+    private void mostraImagem(View viewCriada, final Item item) {
+
+        final ImageView imagem = viewCriada.findViewById(R.id.item_colecao_imagem);
+        recuperaImagemFirebase(item, imagem);
+
+    }
+
+    private void recuperaImagemFirebase(final Item item, final ImageView imagem) {
+        fAuth = FirebaseAuth.getInstance();
+        fUser = fAuth.getCurrentUser();
+        DatabaseReference banco = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference JSONItens = banco.child("itens");
+        DatabaseReference JSONItensPorUsuario = JSONItens.child(fUser.getUid());
+
+        JSONItensPorUsuario.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+                StorageReference pasta = storageReference.child("imagens");
+                StorageReference fotoItem = pasta.child(item.getImagem() + ".jpeg");
+
+                // Download directly from StorageReference using Glide
+                // (See MyAppGlideModule for Loader registration)
+                GlideApp.with(context)
+                        .load(fotoItem)
+                        .into(imagem);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void mostraDescricao(View viewCriada, Item item) {
