@@ -18,9 +18,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.StorageReference;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,24 +26,14 @@ import br.com.myfunkos.R;
 import br.com.myfunkos.adapter.ListaItensAdapter;
 import br.com.myfunkos.model.Item;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
 
     public static final String PATH_IMAGENS = "D:/Documentos/AndroidStudioProjects/MyFunkos/app/src/main/res/raw/";
     public static final String TITULO_APPBAR = "Minha Coleção";
     public FirebaseAuth fAuth;
     public FirebaseUser fUser;
-    private StorageReference mStorageRef;
-    private URL riversRef;
     public List<Item> itens;
     public ListView listaItens;
-
-    public List<Item> getItens() {
-        return itens;
-    }
-
-    public void setItens(List<Item> itens) {
-        this.itens = itens;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +47,6 @@ public class MainActivity extends AppCompatActivity{
         configuraLista();
         configuraBotaoNovoItem();
     }
-
 
     private void configuraLista() {
         DatabaseReference banco = FirebaseDatabase.getInstance().getReference();
@@ -79,7 +66,6 @@ public class MainActivity extends AppCompatActivity{
                 for (DataSnapshot itemBanco : snapshot.getChildren()) {
                     itemRecuperado = itemBanco.getValue(Item.class);
                     itensRecuperados.add(itemRecuperado);
-//                    acrescentaItemNaLista(itemRecuperado);
                 }
 
                 Log.v("Funko", "Qte itens recuparados no OnDataChange: " + itensRecuperados.size());
@@ -97,27 +83,9 @@ public class MainActivity extends AppCompatActivity{
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-
-
         });
-
-        Log.v("Funko", "Itens..." + itens.toString());
-
-//        listaItens.setAdapter(new ListaItensAdapter(itens, this));
-//        listaItens.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int posicao, long l) {
-//                Item itemClicado = itens.get(posicao);
-//                vaiParaDetalhesItem(itemClicado);
-//            }
-//        });
-
     }
 
-    private void acrescentaItemNaLista(Item item) {
-        itens.add(item);
-        Log.v("Funko", "item acrescentado. tamanho: " + itens.size());
-    }
 
     private void vaiParaDetalhesItem(Item itemClicado) {
         Intent intent = new Intent(MainActivity.this, DetalhesItemActivity.class);

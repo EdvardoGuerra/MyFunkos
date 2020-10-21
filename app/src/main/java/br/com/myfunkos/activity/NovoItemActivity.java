@@ -39,8 +39,6 @@ import br.com.myfunkos.model.Item;
 public class NovoItemActivity extends AppCompatActivity {
 
     public static final String TITULO_APPBAR = "Novo Item";
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-    private static final int REQUEST_TAKE_PHOTO = 1234;
 
     private Item item;
     public FirebaseAuth fAuth;
@@ -68,7 +66,6 @@ public class NovoItemActivity extends AppCompatActivity {
         tirarFoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                obterPermissoes();
                 tirarFoto();
             }
         });
@@ -100,19 +97,10 @@ public class NovoItemActivity extends AppCompatActivity {
         }
     }
 
-//    private void obterPermissoes() {
-//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
-//                || ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-//                || ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-//            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-//        } else
-//            dispatchTakePictureIntent();
-//    }
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == 1 && resultCode == RESULT_OK) {
             Bitmap bitmap = (Bitmap) data.getExtras().get("data");
             imageView.setImageBitmap(bitmap);
@@ -145,13 +133,18 @@ public class NovoItemActivity extends AppCompatActivity {
                 salvarImagem();
                 item = obterNovoItem();
                 Log.v("Funko", item.toString());
-
             }
         });
     }
 
     private void salvarImagem() {
         Bitmap imagemBitmap = null;
+        imagemBitmap = obtemImagemEmBitmap();
+        salvaImagemNoFirebaseStorage(imagemBitmap);
+    }
+
+    private Bitmap obtemImagemEmBitmap() {
+        Bitmap imagemBitmap;
         try {
             imagemBitmap = Bitmap.createBitmap(imageView.getWidth(), imageView.getHeight(), Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(imagemBitmap);
@@ -160,7 +153,10 @@ public class NovoItemActivity extends AppCompatActivity {
             BitmapDrawable imagemDrawable = (BitmapDrawable) imageView.getDrawable();
             imagemBitmap = imagemDrawable.getBitmap();
         }
+        return imagemBitmap;
+    }
 
+    private void salvaImagemNoFirebaseStorage(Bitmap imagemBitmap) {
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
         StorageReference pastaImagens = storageReference.child("imagens");
         final String nomeFoto = UUID.randomUUID().toString();
@@ -183,15 +179,14 @@ public class NovoItemActivity extends AppCompatActivity {
                 Log.v("Funko", "Falha no envio da foto");
             }
         });
-
     }
 
     private void salvarItem(String nomeFoto) {
-        DatabaseReference banco= FirebaseDatabase.getInstance().getReference();
+        DatabaseReference banco = FirebaseDatabase.getInstance().getReference();
         DatabaseReference JSONItens = banco.child("itens");
         DatabaseReference JSONItensPorUsuario = JSONItens.child(fUser.getUid());
 
-        String key =JSONItensPorUsuario.push().getKey();
+        String key = JSONItensPorUsuario.push().getKey();
         Item item = obterNovoItem();
         item.setImagem(nomeFoto);
 

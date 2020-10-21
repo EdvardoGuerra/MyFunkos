@@ -52,38 +52,8 @@ public class DetalhesItemActivity extends AppCompatActivity {
             titulo.setText(itemRecuperado.getTitulo());
 
             final ImageView imagem = findViewById(R.id.detalhe_item_imagem);
-            fAuth = FirebaseAuth.getInstance();
-            fUser = fAuth.getCurrentUser();
-            DatabaseReference banco = FirebaseDatabase.getInstance().getReference();
-            DatabaseReference JSONItens = banco.child("itens");
-            DatabaseReference JSONItensPorUsuario = JSONItens.child(fUser.getUid());
+            recuperaImagemDoFirebaseStorage(itemRecuperado, imagem);
 
-            JSONItensPorUsuario.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    StorageReference storageReference = FirebaseStorage.getInstance().getReference();
-                    StorageReference pasta = storageReference.child("imagens");
-                    StorageReference fotoItem = pasta.child(itemRecuperado.getImagem() + ".jpeg");
-
-                    // Download directly from StorageReference using Glide
-                    // (See MyAppGlideModule for Loader registration)
-                    GlideApp.with(context)
-                            .load(fotoItem)
-                            .into(imagem);
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-
-
-
-
-//            Drawable drawableImagem = ResourcesUtil.devolveDrawable(this,
-//                    itemRecuperado.getImagem());
-//            imagem.setImageDrawable(drawableImagem);
 
             TextView descricao = findViewById(R.id.detalhe_item_descricao);
             descricao.setText(itemRecuperado.getDescricao());
@@ -99,5 +69,33 @@ public class DetalhesItemActivity extends AppCompatActivity {
             valor.setText(valorEmTexto);
 
         }
+    }
+
+    private void recuperaImagemDoFirebaseStorage(final Item itemRecuperado, final ImageView imagem) {
+        fAuth = FirebaseAuth.getInstance();
+        fUser = fAuth.getCurrentUser();
+        DatabaseReference banco = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference JSONItens = banco.child("itens");
+        DatabaseReference JSONItensPorUsuario = JSONItens.child(fUser.getUid());
+
+        JSONItensPorUsuario.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+                StorageReference pasta = storageReference.child("imagens");
+                StorageReference fotoItem = pasta.child(itemRecuperado.getImagem() + ".jpeg");
+
+                // Download directly from StorageReference using Glide
+                // (See MyAppGlideModule for Loader registration)
+                GlideApp.with(context)
+                        .load(fotoItem)
+                        .into(imagem);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }
